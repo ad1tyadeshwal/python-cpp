@@ -17,7 +17,7 @@
 #     a =a+1
 
 # salary = float(input("enter your basic salary:"))
-# gross =0
+# gross =0n bvhefajsdvhkcbuew;hakfsbcyuwekhafb0uiqehasbdiuqhbaiskhfiqkhabfuqkehagvpfou;iheqviyasufjgvieyas;fligvyeia;fjgvcig wh;JSD
 # if  salary<=10000:
 #     gross=salary+salary*0.2+salary*0.8
 # elif salary <=20000:
