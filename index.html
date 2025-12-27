@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Flappy Bird Clone</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #70c5ce;
+        overflow: hidden;
+    }
+    canvas {
+        display: block;
+        margin: auto;
+        background: #70c5ce;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+
+<script>
+// ============ GAME SETUP =============
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const gravity = 0.6;
+const jumpForce = -10;
+let score = 0;
+let gameOver = false;
+
+// Load Sounds
+const bgMusic = new Audio("lutt_le_gaya.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.6;
+
+const boomSound = new Audio("boom.mp3");
+const flapSound = new Audio("flap.wav");
+
+// ============ START MUSIC AFTER USER INTERACTION ===========
+let musicStarted = false;
+function startMusic() {
+    if (!musicStarted) {
+        bgMusic.play().catch(e => console.log("Autoplay blocked"));
+        musicStarted = true;
+    }
+}
+document.addEventListener("click", startMusic);
+document.addEventListener("keydown", startMusic);
+
+// ============ PLAYER (BIRD) ===========
+const bird = {
+    x: 80,
+    y: canvas.height / 2,
+    width: 30,
+    height: 30,
+    velocity: 0,
+    draw() {
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    },
+    update() {
+        this.velocity += gravity;
+        this.y += this.velocity;
+
+        if (this.y + this.height > canvas.height) {
+            this.y = canvas.height - this.height;
+            gameOver = true;
+        }
+        if (this.y < 0) {
+            this.y = 0;
+            this.velocity = 0;
+        }
+    },
+    flap() {
+        this.velocity = jumpForce;
+        flapSound.play();
+    }
+};
+
+// ============ PIPES ===========
+const pipeWidth = 50;
+let pipes = [];
+
+function createPipe() {
+    const gap = 120;
+    const minHeight = 50;
+    const maxHeight = canvas.height - gap - minHeight;
+    const heightTop = Math.floor(Math.random() * maxHeight) + minHeight;
+    const heightBottom = canvas.height - gap - heightTop;
+
+    pipes.push({
+        x: canvas.width,
+        topHeight: heightTop,
+        bottomY: canvas.height - heightBottom,
+        passed: false
+    });
+}
+
+// First pipes
+createPipe();
+
+// ============ CONTROLS ===========
+document.addEventListener("keydown", e => {
+    if (e.code === "Space") bird.flap();
+});
+document.addEventListener("click", () => bird.flap());
+
+// ============ GAME LOOP ===========
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // draw bird
+    bird.draw();
+
+    // draw pipes
+    ctx.fillStyle = "green";
+    pipes.forEach(pipe => {
+        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
+        ctx.fillRect(pipe.x, pipe.bottomY, pipeWidth, canvas.height - pipe.bottomY);
+    });
+
+    // score
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.fillText(score, 20, 50);
+}
+
+function update() {
+    bird.update();
+
+    // move pipes
+    pipes.forEach(pipe => {
+        pipe.x -= 2;
+
+        // score
+        if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
+            score++;
+            pipe.passed = true;
+        }
+
+        // collision
+        if (bird.x < pipe.x + pipeWidth &&
+           bird.x + bird.width > pipe.x &&
+           (bird.y < pipe.topHeight ||
+           bird.y + bird.height > pipe.bottomY)) {
+            gameOver = true;
+        }
+    });
+
+    // remove pipes off-screen
+    if (pipes.length && pipes[0].x + pipeWidth < 0) pipes.shift();
+
+    // create new pipes
+    if (pipes.length < 3 &&
+       (pipes[pipes.length - 1].x < canvas.width - 200)) {
+        createPipe();
+    }
+}
+
+function loop() {
+    if (!gameOver) {
+        update();
+        draw();
+        requestAnimationFrame(loop);
+    } else {
+        bgMusic.pause();
+        boomSound.play();
+        ctx.fillStyle = "red";
+        ctx.font = "40px Arial";
+        ctx.fillText("GAME OVER", 50, canvas.height / 2);
+    }
+}
+
+loop();
+</script>
+
+</body>
+</html>

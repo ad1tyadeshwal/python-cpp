@@ -1,0 +1,54 @@
+[
+    {
+        "email": "",
+        "password": ""
+    },
+    {
+        "email": "aditya@gmail.com",
+        "password": "1234"
+    },
+    {
+        "email": "aadi",
+        "password": "123",
+        "task": []
+    },
+    {
+        "email": "123",
+        "password": "aadi",
+        "task": []
+    },
+    {
+        "email": "qwed",
+        "password": "qwed",
+        "tasks": [
+            "hi"
+        ]
+    },
+    {
+        "email": "123",
+        "password": "qwe",
+        "task": []
+    },
+    {
+        "email": "2",
+        "password": "2",
+        "task": [
+            "hi"
+        ]
+    },
+    {
+        "email": "123",
+        "password": "123",
+        "task": [
+            "hello "
+        ]
+    },
+    {
+        "email": "1234567890",
+        "password": "1234567890",
+        "task": [
+            "hello",
+            "hi"
+        ]
+    }
+]
