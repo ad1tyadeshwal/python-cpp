@@ -9,7 +9,7 @@
 # b =int(input("enter the second  number:"))
 
 # c =int(input("how many multiples :"))
-
+# smnjsdkjqsndkn
 # while a<=b:
 #     print("table of ", a)
 #     for i in range ( 1, c+1 ):
